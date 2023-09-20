@@ -40,10 +40,10 @@ class TestAuth:
 
         Assertions.assert_status_code(get_response, 403)
 
-        right_json = {
+        right_json_response = {
             "error": "APP_ID_MISSING"
         }
-        Assertions.assert_right_json_response(get_response, right_json)
+        Assertions.assert_right_json_response(get_response, right_json_response)
 
     @allure.description("Получение списка пользователей с невалидной авторизацией")
     def test_get_list_of_users_with_invalid_auth(self):
@@ -60,7 +60,7 @@ class TestAuth:
 
         Assertions.assert_status_code(get_response, 403)
 
-        right_json = {
+        right_json_response = {
             "error": "APP_ID_NOT_EXIST"
         }
-        Assertions.assert_right_json_response(get_response, right_json)
+        Assertions.assert_right_json_response(get_response, right_json_response)

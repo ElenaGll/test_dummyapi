@@ -26,14 +26,13 @@ class Assertions:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
 
     @staticmethod
-    def assert_json_has_key(response: Response, *key_name):
+    def assert_json_has_key(response: Response, key_name):
         """
         Проверка, что в ответе формата json есть ключ со значением key_name
         """
         Assertions.assert_is_json(response)
         response_as_dict = response.json()
-        for name in key_name:
-            assert name in response_as_dict, f"Response JSON doesn't have key '{name}'"
+        assert key_name in response_as_dict, f"Response JSON doesn't have key '{key_name}'"
 
     @staticmethod
     def assert_count_elements_in_data(response: Response, expected_value):
@@ -74,7 +73,9 @@ class Assertions:
         """
         Проверка, что на странице выведено правильное количество пользователей
         """
-        Assertions.assert_json_has_key(response, 'total', 'page', 'limit')
+        Assertions.assert_json_has_key(response, 'total')
+        Assertions.assert_json_has_key(response, 'page')
+        Assertions.assert_json_has_key(response, 'limit')
         response_as_dict = response.json()
         total = response_as_dict['total']
         page = response_as_dict['page']
