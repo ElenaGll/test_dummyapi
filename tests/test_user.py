@@ -7,7 +7,7 @@ from lib.requests import Requests
 from lib.assertions import Assertions
 
 
-@allure.epic("Проверки пагинации")
+@allure.epic("Проверки пользователя")
 class TestUser:
     """
     Проверки пользователя
