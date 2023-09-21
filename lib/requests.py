@@ -16,39 +16,45 @@ class Requests:
     cookie = ''
 
     @staticmethod
-    def get(url: str, params: dict = None, headers=None):
+    def get(url: str, params: dict = None, headers: dict = None):
         if headers is None:
             headers = Requests.headers
         with allure.step('Run GET method'):
-            Logger.add_request(url, 'GET', str(params))
+            Logger.add_request(url, 'GET', str(headers), str(params))
             response = requests.get(url, params=params, headers=headers,
                                     cookies=Requests.cookie)
             Logger.add_response(response)
             return response
 
     @staticmethod
-    def post(url: str, params: dict = None, body: dict = None):
+    def post(url: str, params: dict = None, body: dict = None, headers: dict = None):
+        if headers is None:
+            headers = Requests.headers
         with allure.step('Run POST method'):
-            Logger.add_request(url, 'POST', str(params))
-            response = requests.post(url, params=params, headers=Requests.headers,
+            Logger.add_request(url, 'POST', str(headers), str(params))
+            response = requests.post(url, params=params, headers=headers,
                                      cookies=Requests.cookie, json=body)
             Logger.add_response(response)
             return response
 
     @staticmethod
-    def put(url: str, params: dict = None, body: dict = None):
+    def put(url: str, params: dict = None, body: dict = None, headers: dict = None):
+        if headers is None:
+            headers = Requests.headers
         with allure.step('Run PUT method'):
-            Logger.add_request(url, 'PUT', str(params))
-            response = requests.put(url, params=params, headers=Requests.headers,
+            Logger.add_request(url, 'PUT', str(headers), str(params))
+            response = requests.put(url, params=params, headers=headers,
                                     cookies=Requests.cookie, json=body)
             Logger.add_response(response)
             return response
 
     @staticmethod
-    def delete(url: str, params: dict = None, body: dict = None):
+    def delete(url: str, params: dict = None, body: dict = None, headers: dict = None):
+        if headers is None:
+            headers = Requests.headers
         with allure.step('Run DELETE method'):
-            Logger.add_request(url, 'DELETE', str(params))
-            response = requests.delete(url, params=params, headers=Requests.headers,
+            Logger.add_request(url, 'DELETE', str(headers), str(params))
+            response = requests.delete(url, params=params, headers=headers,
                                        cookies=Requests.cookie, json=body)
             Logger.add_response(response)
             return response
