@@ -27,7 +27,7 @@ class BaseCase:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
 
     @staticmethod
-    def get_json_value(response: Response, name):
+    def get_json_value_by_name(response: Response, name):
         """
         Получить значение из JSON ответа по имени ключа name
         """

@@ -59,6 +59,18 @@ class Assertions:
             f"Value of {key_name} is not equal to {expected_value}. Value is equal to {response_as_dict[key_name]}"
 
     @staticmethod
+    def assert_json_value_by_name_in_location(response: Response, key_name, expected_value):
+        """
+        Проверка, что значение key_name в поле 'location' JSON ответа равно expected_value
+        """
+        Assertions.assert_is_json(response)
+        response_as_dict = response.json()
+
+        assert 'location' in response_as_dict, f"Response JSON doesn't have key '{key_name}'"
+        assert response_as_dict['location'][key_name] == expected_value, \
+            f"Value of {key_name} in 'location' is not equal to {expected_value}. Value is equal to {response_as_dict[key_name]}"
+
+    @staticmethod
     def assert_right_json_response(response: Response, expected_json):
         """
         Проверка, что JSON ответ равен expected_json
