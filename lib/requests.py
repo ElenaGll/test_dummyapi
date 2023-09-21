@@ -31,7 +31,7 @@ class Requests:
         if headers is None:
             headers = Requests.headers
         with allure.step('Run POST method'):
-            Logger.add_request(url, 'POST', str(headers), str(params))
+            Logger.add_request(url, 'POST', str(headers), str(params), str(body))
             response = requests.post(url, params=params, headers=headers,
                                      cookies=Requests.cookie, json=body)
             Logger.add_response(response)
@@ -42,7 +42,7 @@ class Requests:
         if headers is None:
             headers = Requests.headers
         with allure.step('Run PUT method'):
-            Logger.add_request(url, 'PUT', str(headers), str(params))
+            Logger.add_request(url, 'PUT', str(headers), str(params), str(body))
             response = requests.put(url, params=params, headers=headers,
                                     cookies=Requests.cookie, json=body)
             Logger.add_response(response)
@@ -53,7 +53,7 @@ class Requests:
         if headers is None:
             headers = Requests.headers
         with allure.step('Run DELETE method'):
-            Logger.add_request(url, 'DELETE', str(headers), str(params))
+            Logger.add_request(url, 'DELETE', str(headers), str(params), str(body))
             response = requests.delete(url, params=params, headers=headers,
                                        cookies=Requests.cookie, json=body)
             Logger.add_response(response)
