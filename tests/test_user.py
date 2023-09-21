@@ -227,3 +227,229 @@ class TestUser:
         Assertions.assert_json_value_by_name_in_location(get_user_response, 'timezone', timezone)
         Assertions.assert_json_value_by_name(get_user_response, 'registerDate', register_date)
         Assertions.assert_json_value_by_name(get_user_response, 'updatedDate', updated_date)
+
+    @allure.description("Создание пользователя с невалидным first_name")
+    @pytest.mark.parametrize('first_name', ['', ' ', 'B', 'iEukQCTNWgYjIrdZQAhXMDYmoHXAVYwyDHAOKjQsQpePcMuElaL',
+                                            'KGiOwYrxlkwBpGfnlciHAYhGNZtxisvXmBTykBkomlidwtqhXAvKehxKbKXycbsVYnxCTNSpkspVw'])
+    def test_create_user_with_invalid_first_name(self, first_name):
+        """
+        Создание пользователя с невалидным first_name
+        """
+        create_user_resource = '/user/create'
+        create_user_url = TestUser.base_url + create_user_resource
+
+        email = BaseCase.get_email()
+        create_body = {
+            "firstName": first_name,
+            "lastName": "Nathan",
+            "email": email
+        }
+        create_user_response = Requests.post(create_user_url, body=create_body)
+
+        if first_name in ['', ' ']:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "firstName": "Path `firstName` is required."
+                }
+            }
+        elif len(first_name) < 2:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "firstName": f"Path `firstName` (`{first_name}`) is shorter than the minimum allowed length (2)."
+                }
+            }
+        else:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "firstName": f"Path `firstName` (`{first_name}`) is longer than the maximum allowed length (30)."
+                }
+            }
+
+        Assertions.assert_status_code(create_user_response, 400)
+        Assertions.assert_right_json_response(create_user_response, right_json_response)
+
+    @allure.description("Создание пользователя с невалидным last_name")
+    @pytest.mark.parametrize('last_name', ['', ' ', 'B', 'iEukQCTNWgYjIrdZQAhXMDYmoHXAVYwyDHAOKjQsQpePcMuElaL',
+                                            'KGiOwYrxlkwBpGfnlciHAYhGNZtxisvXmBTykBkomlidwtqhXAvKehxKbKXycbsVYnxCTNSpkspVw'])
+    def test_create_user_with_invalid_last_name(self, last_name):
+        """
+        Создание пользователя с невалидным first_name
+        """
+        create_user_resource = '/user/create'
+        create_user_url = TestUser.base_url + create_user_resource
+
+        email = BaseCase.get_email()
+        create_body = {
+            "firstName": "Nathan",
+            "lastName": last_name,
+            "email": email
+        }
+        create_user_response = Requests.post(create_user_url, body=create_body)
+
+        if last_name in ['', ' ']:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "lastName": "Path `lastName` is required."
+                }
+            }
+        elif len(last_name) < 2:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "lastName": f"Path `lastName` (`{last_name}`) is shorter than the minimum allowed length (2)."
+                }
+            }
+        else:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "lastName": f"Path `lastName` (`{last_name}`) is longer than the maximum allowed length (30)."
+                }
+            }
+
+        Assertions.assert_status_code(create_user_response, 400)
+        Assertions.assert_right_json_response(create_user_response, right_json_response)
+
+    @allure.description("Создание пользователя с невалидным email")
+    @pytest.mark.parametrize('email', ['', ' ', 'foo@excom', 'fooex.com', 'foo bar@ex.com', 'foo@ex ex.com',
+                                       '@ex.com', 'foo@', 'foo!foo@e.com'])
+    def test_create_user_with_invalid_email(self, email):
+        """
+        Создание пользователя с невалидным email
+        """
+        create_user_resource = '/user/create'
+        create_user_url = TestUser.base_url + create_user_resource
+
+        create_body = {
+            "firstName": "Nathan",
+            "lastName": "Borisov",
+            "email": email
+        }
+        create_user_response = Requests.post(create_user_url, body=create_body)
+
+        if email in ['', ' ']:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "email": "Path `email` is required."
+                }
+            }
+        else:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    f"email": f"Path `email` is invalid ({email})."
+                }
+            }
+
+        Assertions.assert_status_code(create_user_response, 400)
+        Assertions.assert_right_json_response(create_user_response, right_json_response)
+
+    @allure.description("Создание пользователя с невалидным title")
+    @pytest.mark.parametrize('title', [1, 'MR', 'someword', '#$'])
+    def test_create_user_with_invalid_title(self, title):
+        """
+        Создание пользователя с невалидным title
+        """
+        create_user_resource = '/user/create'
+        create_user_url = TestUser.base_url + create_user_resource
+
+        email = BaseCase.get_email()
+        create_body = {
+            "title": title,
+            "firstName": 'Nathan',
+            "lastName": "Borisov",
+            "email": email
+        }
+        create_user_response = Requests.post(create_user_url, body=create_body)
+
+        right_json_response = {
+            "error": "BODY_NOT_VALID",
+            "data": {
+                f"title": f"`{title}` is not a valid enum value for path `title`."
+            }
+        }
+
+        Assertions.assert_status_code(create_user_response, 400)
+        Assertions.assert_right_json_response(create_user_response, right_json_response)
+
+    @allure.description("Создание пользователя с невалидным gender")
+    @pytest.mark.parametrize('gender', [1, 'MALE', 'someword', '#$'])
+    def test_create_user_with_invalid_gender(self, gender):
+        """
+        Создание пользователя с невалидным gender
+        """
+        create_user_resource = '/user/create'
+        create_user_url = TestUser.base_url + create_user_resource
+
+        email = BaseCase.get_email()
+        create_body = {
+            "firstName": 'Nathan',
+            "lastName": "Borisov",
+            "email": email,
+            "gender": gender
+        }
+        create_user_response = Requests.post(create_user_url, body=create_body)
+
+        right_json_response = {
+            "error": "BODY_NOT_VALID",
+            "data": {
+                f"gender": f"`{gender}` is not a valid enum value for path `gender`."
+            }
+        }
+
+        Assertions.assert_status_code(create_user_response, 400)
+        Assertions.assert_right_json_response(create_user_response, right_json_response)
+
+    @allure.description("Создание пользователя с невалидным date_of_birth")
+    @pytest.mark.parametrize('date_of_birth', [pytest.param('', marks=pytest.mark.xfail),
+                                               pytest.param(1, marks=pytest.mark.xfail),
+                                               ' ', '1899-01-01', '3000-01-01', 'someword', '#$'])
+    def test_create_user_with_invalid_date_of_birth(self, date_of_birth):
+        """
+        Создание пользователя с невалидным email
+        """
+        create_user_resource = '/user/create'
+        create_user_url = TestUser.base_url + create_user_resource
+
+        email = BaseCase.get_email()
+        create_body = {
+            "firstName": "Nathan",
+            "lastName": "Borisov",
+            "email": email,
+            "dateOfBirth": date_of_birth
+        }
+        create_user_response = Requests.post(create_user_url, body=create_body)
+
+        if date_of_birth in ['', ' ', 1, 'someword', '#$']:
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    f"dateOfBirth": f"Cast to date failed for value \"{date_of_birth}\" (type string) at path "
+                                    f"\"dateOfBirth\""
+                }
+            }
+            Assertions.assert_status_code(create_user_response, 400)
+            Assertions.assert_right_json_response(create_user_response, right_json_response)
+
+        elif date_of_birth == '1899-01-01':
+            right_json_response = {
+                "error": "BODY_NOT_VALID",
+                "data": {
+                    "dateOfBirth": "Path `dateOfBirth` (Sun Jan 01 1899 00:00:00 GMT+0000 (Coordinated Universal "
+                                   "Time)) is before minimum allowed value (Mon Jan 01 1900 00:00:00 GMT+0000 "
+                                   "(Coordinated Universal Time))."
+                }
+            }
+            Assertions.assert_status_code(create_user_response, 400)
+            Assertions.assert_right_json_response(create_user_response, right_json_response)
+
+        else:
+            Assertions.assert_status_code(create_user_response, 400)
+            Assertions.assert_json_value_by_name(create_user_response, 'error', 'BODY_NOT_VALID')
+            Assertions.assert_json_has_key(create_user_response, 'data')
+
