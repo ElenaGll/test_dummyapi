@@ -1,4 +1,5 @@
 import time
+from datetime import date
 from requests import Response
 from json.decoder import JSONDecodeError
 
@@ -15,6 +16,13 @@ class BaseCase:
         """
         email = f'{time.time()}@example.com'
         return email
+
+    @staticmethod
+    def get_current_date():
+        """
+        Получить сегодняшнюю дату
+        """
+        return date.today()
 
     @staticmethod
     def is_json(response: Response):
